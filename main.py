@@ -23,59 +23,57 @@ nlp = spacy.load("en_core_web_trf")
 # converting the text
 soup = BeautifulSoup(r.text, "html.parser")
 
-# for a in soup.find_all('a', href=True):
-#     href = a['href']
-#     if "meta" not in href and href.endswith(".7z"):
-#         url = site + "/" + href
-#         print(url)
-#         if "askubuntu.com.7z" not in href \
-#                 and "dba.stackexchange.com.7z" not in href \
-#                 and "electronics.stackexchange.com.7z" not in href:
-#             # if not exists("./data/"+href):
-#             #     wget.download(url, out="./data", bar=wget.bar_thermometer)
-#             # else:
-#             #     print("Already exists.")
-#
-#             archive = py7zr.SevenZipFile('./data/' + href, mode='r')
-#             archive.extractall(path="./tmp/")
-#             archive.close()
-#
-#             tree = ET.parse('./tmp/Posts.xml')
-#             root = tree.getroot()
-#             for ele in root:
-#                 print(ele.attrib['Body'])
-#                 soup2 = BeautifulSoup(ele.attrib['Body'], "html.parser")
-#                 doc = nlp(soup2.get_text())
-#
-#                 for token in doc:
-#                     print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_,
-#                           token.shape_, token.is_alpha, token.is_stop)
-#                     try:
-#                         cur.execute("CREATE TABLE IF NOT EXISTS " + token.pos_.lower() + "(word TEXT NOT NULL)")
-#                         res = cur.execute(
-#                             "SELECT count(*) FROM " + token.pos_.lower() + " WHERE word='" + token.text + "'")
-#                         count = res.fetchone()[0]
-#                         print("count:", count)
-#                         if count == 0:
-#                             cur.execute("INSERT INTO " + token.pos_.lower() + " VALUES('" + token.text + "')")
-#                             con.commit()
-#                         else:
-#                             print("count != 0")
-#                     except sqlite3.Error as er:
-#                         print('SQLite error: %s' % (' '.join(er.args)))
-#                         print("Exception class is: ", er.__class__)
-#                         print('SQLite traceback: ')
-#                         exc_type, exc_value, exc_tb = sys.exc_info()
-#                         print(traceback.format_exception(exc_type, exc_value, exc_tb))
-#
-#             # Try to remove the tree; if it fails, throw an error using try...except.
-#             try:
-#                 shutil.rmtree("./tmp/")
-#
-#             except OSError as e:
-#                 print("Error: %s - %s." % (e.filename, e.strerror))
-#
-#         print("\n")
+for a in soup.find_all('a', href=True):
+    href = a['href']
+    if "meta" not in href and href.endswith(".7z"):
+        url = site + "/" + href
+        print(url)
+        if "askubuntuasdfjkslfsakldf.com.7z" not in href
+            if not exists("./data/"+href):
+                wget.download(url, out="./data", bar=wget.bar_thermometer)
+            else:
+                print("Already exists.")
+
+            archive = py7zr.SevenZipFile('./data/' + href, mode='r')
+            archive.extractall(path="./tmp/")
+            archive.close()
+
+            tree = ET.parse('./tmp/Posts.xml')
+            root = tree.getroot()
+            for ele in root:
+                print(ele.attrib['Body'])
+                soup2 = BeautifulSoup(ele.attrib['Body'], "html.parser")
+                doc = nlp(soup2.get_text())
+
+                for token in doc:
+                    print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_,
+                          token.shape_, token.is_alpha, token.is_stop)
+                    try:
+                        cur.execute("CREATE TABLE IF NOT EXISTS " + token.pos_.lower() + "(word TEXT NOT NULL)")
+                        res = cur.execute(
+                            "SELECT count(*) FROM " + token.pos_.lower() + " WHERE word='" + token.text + "'")
+                        count = res.fetchone()[0]
+                        print("count:", count)
+                        if count == 0:
+                            cur.execute("INSERT INTO " + token.pos_.lower() + " VALUES('" + token.text + "')")
+                            con.commit()
+                        else:
+                            print("count != 0")
+                    except sqlite3.Error as er:
+                        print('SQLite error: %s' % (' '.join(er.args)))
+                        print("Exception class is: ", er.__class__)
+                        print('SQLite traceback: ')
+                        exc_type, exc_value, exc_tb = sys.exc_info()
+                        print(traceback.format_exception(exc_type, exc_value, exc_tb))
+
+            # Try to remove the tree; if it fails, throw an error using try...except.
+            try:
+                shutil.rmtree("./tmp/")
+
+            except OSError as e:
+                print("Error: %s - %s." % (e.filename, e.strerror))
+
+        print("\n")
 
 stats = {}
 
