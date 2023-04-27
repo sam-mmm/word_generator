@@ -18,7 +18,7 @@ cur = con.cursor()
 site = "https://archive.org/download/stackexchange"
 r = requests.get(site)
 
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.load("en_core_web_trf")
 
 # converting the text
 soup = BeautifulSoup(r.text, "html.parser")
