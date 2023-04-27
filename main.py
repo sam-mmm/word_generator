@@ -28,7 +28,7 @@ for a in soup.find_all('a', href=True):
     if "meta" not in href and href.endswith(".7z"):
         url = site + "/" + href
         print(url)
-        if "askubuntuasdfjkslfsakldf.com.7z" not in href
+        if "askubuntuasdfjkslfsakldf.com.7z" not in href:
             if not exists("./data/"+href):
                 wget.download(url, out="./data", bar=wget.bar_thermometer)
             else:
