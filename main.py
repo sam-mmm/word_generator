@@ -41,7 +41,12 @@ for a in soup.find_all('a', href=True):
         root = tree.getroot()
         for ele in root:
             # print(ele.attrib['Body'])
-            soup2 = BeautifulSoup(ele.attrib['Body'], "html.parser")
+            soup2 = soup
+            try:
+                soup2 = BeautifulSoup(ele.attrib['Body'], "html.parser")
+            except MarkupResemblesLocatorWarning as e:
+                print(e)
+
             doc = nlp(soup2.get_text())
 
             for token in doc:
@@ -65,7 +70,7 @@ for a in soup.find_all('a', href=True):
                     print('SQLite traceback: ')
                     exc_type, exc_value, exc_tb = sys.exc_info()
                     print(traceback.format_exception(exc_type, exc_value, exc_tb))
-
+            print("Done,", soup2.get_text())
         # Try to remove the tree; if it fails, throw an error using try...except.
         try:
             shutil.rmtree("./tmp/")
