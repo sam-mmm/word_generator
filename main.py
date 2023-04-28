@@ -70,7 +70,8 @@ for a in soup.find_all('a', href=True):
                     print('SQLite traceback: ')
                     exc_type, exc_value, exc_tb = sys.exc_info()
                     print(traceback.format_exception(exc_type, exc_value, exc_tb))
-            print("Done,", soup2.get_text())
+
+            print("Done,", href, "\n", soup2.get_text())
         # Try to remove the tree; if it fails, throw an error using try...except.
         try:
             shutil.rmtree("./tmp/")
