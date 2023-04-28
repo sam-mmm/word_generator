@@ -18,7 +18,7 @@ cur = con.cursor()
 site = "https://archive.org/download/stackexchange"
 r = requests.get(site)
 
-nlp = spacy.load("en_core_web_md")
+nlp = spacy.load("en_core_web_sm")
 
 # converting the text
 soup = BeautifulSoup(r.text, "html.parser")
@@ -49,18 +49,19 @@ for a in soup.find_all('a', href=True):
                 #       token.shape_, token.is_alpha, token.is_stop)
                 try:
                     cur.execute("CREATE TABLE IF NOT EXISTS " + token.pos_.lower() + "(word TEXT NOT NULL)")
-                    res = cur.execute(
-                        "SELECT count(*) FROM " + token.pos_.lower() + " WHERE word='" + token.text + "'")
+                    sql2 = "SELECT count(*) FROM " + token.pos_.lower() + " WHERE word = ?"
+                    res = cur.execute(sql2, (token.text,))
                     count = res.fetchone()[0]
                     # print("count:", count)
                     if count == 0:
-                        cur.execute("INSERT INTO " + token.pos_.lower() + " VALUES('" + token.text + "')")
+                        cur.execute("INSERT INTO " + token.pos_.lower() + " VALUES(?)", (token.text,))
                         con.commit()
                     # else:
                     #     print("count != 0")
                 except sqlite3.Error as er:
                     print('SQLite error: %s' % (' '.join(er.args)))
                     print("Exception class is: ", er.__class__)
+                    print('SQL2:',sql2)
                     print('SQLite traceback: ')
                     exc_type, exc_value, exc_tb = sys.exc_info()
                     print(traceback.format_exception(exc_type, exc_value, exc_tb))
