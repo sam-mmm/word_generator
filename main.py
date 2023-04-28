@@ -40,24 +40,24 @@ for a in soup.find_all('a', href=True):
         tree = ET.parse('./tmp/Posts.xml')
         root = tree.getroot()
         for ele in root:
-            print(ele.attrib['Body'])
+            # print(ele.attrib['Body'])
             soup2 = BeautifulSoup(ele.attrib['Body'], "html.parser")
             doc = nlp(soup2.get_text())
 
             for token in doc:
-                print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_,
-                      token.shape_, token.is_alpha, token.is_stop)
+                # print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_,
+                #       token.shape_, token.is_alpha, token.is_stop)
                 try:
                     cur.execute("CREATE TABLE IF NOT EXISTS " + token.pos_.lower() + "(word TEXT NOT NULL)")
                     res = cur.execute(
                         "SELECT count(*) FROM " + token.pos_.lower() + " WHERE word='" + token.text + "'")
                     count = res.fetchone()[0]
-                    print("count:", count)
+                    # print("count:", count)
                     if count == 0:
                         cur.execute("INSERT INTO " + token.pos_.lower() + " VALUES('" + token.text + "')")
                         con.commit()
-                    else:
-                        print("count != 0")
+                    # else:
+                    #     print("count != 0")
                 except sqlite3.Error as er:
                     print('SQLite error: %s' % (' '.join(er.args)))
                     print("Exception class is: ", er.__class__)
