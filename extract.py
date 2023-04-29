@@ -18,14 +18,15 @@ for line in Lines:
 
     tree = ET.parse('./tmp/Posts.xml')
     root = tree.getroot()
+    i = 1
     for ele in root:
         # print(ele.attrib['Body'])
         try:
             soup2 = BeautifulSoup(ele.attrib['Body'], "html.parser")
-            with open("./data/content.text", "a") as my_file:
+            with open("./striped/"+line.strip()+str(i)+".txt", "a") as my_file:
                 my_file.write(soup2.get_text())
                 my_file.write("\n")
-
+            i += 1
         except MarkupResemblesLocatorWarning as e:
             print(e)
 
