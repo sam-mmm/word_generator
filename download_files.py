@@ -22,3 +22,5 @@ for a in soup.find_all('a', href=True):
         with open("./data/file_list.text", "a") as my_file:
             my_file.write(href)
             my_file.write("\n")
+
+        print("\n")
