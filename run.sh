@@ -1,5 +1,5 @@
-#python3 to_be_download_files.py
-#python3 extract.py
+python3 to_be_download_files.py
+python3 extract.py
 
 while read line
 do
@@ -9,8 +9,8 @@ echo "Line:" $line
   do
       # commands to execute for each file
       echo "Processing file: $file"
-  #    python3 nlp.py $file
-  #    rm $file
+      python3 nlp.py $file
+      rm $file
   done
 done < ./data/file_list.text
 
