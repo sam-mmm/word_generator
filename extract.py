@@ -1,5 +1,6 @@
 import os
 import shutil
+import sys
 import uuid
 
 import xml.etree.ElementTree as ET
@@ -16,11 +17,6 @@ if not exists(source_text_files):
 temp_folder = "./data/temp"
 if not exists(temp_folder):
     os.makedirs(temp_folder)
-
-file1 = open('./data/file_list.text', 'r')
-Lines = file1.readlines()
-
-count = 0
 
 
 def extract_content_files(file_1, tag):
@@ -39,19 +35,16 @@ def extract_content_files(file_1, tag):
             print(e)
 
 
-# Strips the newline character
-for line in Lines:
-    count += 1
-    print(line)
-    wget.download(line, out=temp_folder, bar=wget.bar_thermometer)
-    if "Posts" in line:
-        path = temp_folder+"/Posts.xml"
-        print(path)
-        extract_content_files(path, 'Body')
-        os.remove(path)
-    if "Comments" in line:
-        path = temp_folder+"/Comments.xml"
-        print(path)
-        extract_content_files(path, 'Text')
-        os.remove(temp_folder+"/Comments.xml")
-
+line = sys.argv[1]
+print(line)
+wget.download(line, out=temp_folder, bar=wget.bar_thermometer)
+if "Posts" in line:
+    path = temp_folder + "/Posts.xml"
+    print(path)
+    extract_content_files(path, 'Body')
+    os.remove(path)
+if "Comments" in line:
+    path = temp_folder + "/Comments.xml"
+    print(path)
+    extract_content_files(path, 'Text')
+    os.remove(temp_folder + "/Comments.xml")

@@ -1,11 +1,13 @@
 python3 to_be_download_files.py
 echo "to_be_download_files DONE"
-python3 extract.py
-echo "extract DONE"
+#python3 extract.py
+#echo "extract DONE"
 
 while read line
 do
 echo "Line:" $line
+
+  python3 extract.py $line
 
   for file in ./data/source_text/*
   do
