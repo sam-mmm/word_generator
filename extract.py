@@ -1,10 +1,21 @@
+import os
 import shutil
+import uuid
 
 import xml.etree.ElementTree as ET
 from os.path import exists
 
 import py7zr
+import wget
 from bs4 import BeautifulSoup, MarkupResemblesLocatorWarning
+
+source_text_files = "./data/source_text/"
+if not exists(source_text_files):
+    os.makedirs(source_text_files)
+
+temp_folder = "./data/temp"
+if not exists(temp_folder):
+    os.makedirs(temp_folder)
 
 file1 = open('./data/file_list.text', 'r')
 Lines = file1.readlines()
@@ -20,7 +31,7 @@ def extract_content_files(file_1, tag):
         # print(ele.attrib['Body'])
         try:
             soup2 = BeautifulSoup(ele.attrib[tag], "html.parser")
-            with open("./striped/" + line.strip() + str(i) + ".txt", "a") as my_file:
+            with open(source_text_files + str(uuid.uuid4()) + ".txt", "a") as my_file:
                 my_file.write(soup2.get_text())
                 my_file.write("\n")
             i += 1
@@ -31,18 +42,16 @@ def extract_content_files(file_1, tag):
 # Strips the newline character
 for line in Lines:
     count += 1
-    print("File{}: {}".format(count, line.strip()))
-    archive = py7zr.SevenZipFile('./data/' + line.strip(), mode='r')
-    archive.extractall(path="./tmp/")
-    archive.close()
+    print(line)
+    wget.download(line, out=temp_folder, bar=wget.bar_thermometer)
+    if "Posts" in line:
+        path = temp_folder+"/Posts.xml"
+        print(path)
+        extract_content_files(path, 'Body')
+        os.remove(path)
+    if "Comments" in line:
+        path = temp_folder+"/Comments.xml"
+        print(path)
+        extract_content_files(path, 'Text')
+        os.remove(temp_folder+"/Comments.xml")
 
-    file1 = './tmp/Posts.xml'
-    file2 = './tmp/Comments.xml'
-    if exists(file1):
-        extract_content_files(file1, 'Body')
-    if exists(file2):
-        extract_content_files(file2, 'Text')
-    try:
-        shutil.rmtree("./tmp/")
-    except OSError as e:
-        print("Error: %s - %s." % (e.filename, e.strerror))
