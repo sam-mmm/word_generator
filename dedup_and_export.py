@@ -2,6 +2,7 @@ import json
 import os
 import sqlite3
 from os.path import exists
+import re
 
 data_file = "./data/export/"
 if not exists(data_file):
@@ -18,7 +19,7 @@ for row in res:
     for elem in row:
         print(elem)
         cur3 = con.cursor()
-        res3 = cur3.execute("CREATE TABLE IF NOT EXISTS " + elem.lower()+"_deduplicated AS select distinct * from "+elem.lower())
+        res3 = cur3.execute("CREATE TABLE IF NOT EXISTS " + elem.lower()+"_deduplicated AS select distinct * from "+elem.lower()+" WHERE word NOT LIKE '%[a-z0-9]%'")
         res3 = cur3.execute("SELECT count(*) FROM " + elem.lower()+"_deduplicated")
         count = res3.fetchone()[0]
         stats[elem] = count
@@ -27,8 +28,9 @@ for row in res:
             data = cur2.execute("SELECT word FROM " + elem)
             for row2 in data:
                 for elem2 in row2:
-                    my_file.write(elem2)
-                    my_file.write('\n')
+                    if re.match("^[A-Za-z]*$", elem2):
+                        my_file.write(elem2)
+                        my_file.write('\n')
 
             cur2.close()
 
